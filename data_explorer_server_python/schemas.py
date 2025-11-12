@@ -211,9 +211,7 @@ class ChartResponse(BaseModel):
 class OpenResponse(BaseModel):
     datasets: List[DatasetSummary]
     active_dataset_id: Optional[str] = Field(default=None, alias="activeDatasetId")
-    supports_chunk_upload: bool = Field(
-        default=False, alias="supportsChunkUpload"
-    )
+    supports_chunk_upload: bool = Field(default=False, alias="supportsChunkUpload")
     max_upload_bytes: int = Field(default=0, alias="maxUploadBytes")
 
     model_config = ConfigDict(populate_by_name=True)

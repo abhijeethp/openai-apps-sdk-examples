@@ -115,7 +115,9 @@ def _load_widget_assets() -> tuple[str, Optional[str], Optional[str]]:
         except FileNotFoundError:
             ASSET_LOGGER.warning("Stylesheet asset missing: %s", style_filename)
         except OSError as exc:
-            ASSET_LOGGER.warning("Failed to read stylesheet %s: %s", style_filename, exc)
+            ASSET_LOGGER.warning(
+                "Failed to read stylesheet %s: %s", style_filename, exc
+            )
         if style_text is not None:
             html_source = _STYLESHEET_LINK_PATTERN.sub(
                 f'<link rel="stylesheet" href="{STYLE_URI}" />',
@@ -142,7 +144,9 @@ class UploadSession:
     byte_count: int = 0
     chunk_count: int = 0
 
-    def append_chunk(self, chunk: str, chunk_index: Optional[int], max_bytes: int) -> int:
+    def append_chunk(
+        self, chunk: str, chunk_index: Optional[int], max_bytes: int
+    ) -> int:
         if chunk_index is not None and chunk_index != self.chunk_count:
             raise ValueError(
                 f"Unexpected chunkIndex {chunk_index}; expected {self.chunk_count}."
@@ -288,7 +292,12 @@ def _extract_path_from_payload(payload: UploadDatasetInput) -> Optional[Path]:
         if not path_component:
             raise HTTPException(status_code=400, detail="fileUri is missing a path.")
 
-        if os.name == "nt" and path_component.startswith("/") and len(path_component) > 2 and path_component[2] == ":":
+        if (
+            os.name == "nt"
+            and path_component.startswith("/")
+            and len(path_component) > 2
+            and path_component[2] == ":"
+        ):
             path_component = path_component.lstrip("/")
 
         return Path(path_component).expanduser()
@@ -314,7 +323,9 @@ def _read_csv_from_path(path: Path, desired_encoding: Optional[str]) -> str:
     if file_size == 0:
         raise HTTPException(status_code=400, detail="Uploaded file is empty.")
     if file_size > MAX_UPLOAD_BYTES:
-        raise HTTPException(status_code=413, detail=_format_size_limit_error(MAX_UPLOAD_BYTES))
+        raise HTTPException(
+            status_code=413, detail=_format_size_limit_error(MAX_UPLOAD_BYTES)
+        )
 
     raw_bytes = resolved_path.read_bytes()
     # Probe encodings in priority order, skipping duplicates
@@ -351,9 +362,13 @@ def _resolve_upload_source(payload: UploadDatasetInput) -> tuple[str, Optional[s
 
     path = _extract_path_from_payload(payload)
     if path is None:
-        raise HTTPException(status_code=400, detail="No CSV source provided for upload.")
+        raise HTTPException(
+            status_code=400, detail="No CSV source provided for upload."
+        )
 
-    csv_text = _read_csv_from_path(path, payload.encoding.strip() if payload.encoding else None)
+    csv_text = _read_csv_from_path(
+        path, payload.encoding.strip() if payload.encoding else None
+    )
     filename = payload.filename or path.name
     return csv_text, filename
 
@@ -369,14 +384,16 @@ def _csv_to_dataframe(csv_text: str, payload: UploadDatasetInput) -> pd.DataFram
     try:
         dataframe = pd.read_csv(buffer, **read_kwargs)
     except (EmptyDataError, ParserError) as exc:
-        raise HTTPException(status_code=400, detail=f"Failed to parse CSV: {exc}") from exc
+        raise HTTPException(
+            status_code=400, detail=f"Failed to parse CSV: {exc}"
+        ) from exc
 
     if dataframe.empty:
         raise HTTPException(status_code=400, detail="Uploaded CSV is empty.")
 
     dataframe = dataframe.convert_dtypes()
     if not payload.has_header:
-        dataframe.columns = [f"column_{idx+1}" for idx in range(dataframe.shape[1])]
+        dataframe.columns = [f"column_{idx + 1}" for idx in range(dataframe.shape[1])]
 
     return dataframe
 
@@ -403,7 +420,9 @@ def _tool_meta() -> Dict[str, Any]:
 
 @mcp._mcp_server.list_tools()
 async def _list_tools() -> List[types.Tool]:
-    def build_tool(name: str, title: str, description: str, input_schema: Dict[str, Any]) -> types.Tool:
+    def build_tool(
+        name: str, title: str, description: str, input_schema: Dict[str, Any]
+    ) -> types.Tool:
         return types.Tool(
             name=name,
             title=title,
@@ -687,7 +706,9 @@ def _handle_preview(args: Dict[str, Any]) -> PreviewResponse:
     payload = PreviewInput.model_validate(args)
     record = store.get(payload.dataset_id)
     filtered = apply_filters(record.dataframe, payload.filters)
-    preview_rows = dataframe_preview(filtered, limit=payload.limit, offset=payload.offset)
+    preview_rows = dataframe_preview(
+        filtered, limit=payload.limit, offset=payload.offset
+    )
 
     response = PreviewResponse(
         dataset_id=record.dataset_id,
@@ -726,7 +747,9 @@ async def _on_read_resource(req: types.ReadResourceRequest) -> types.ServerResul
 async def _on_call_tool(req: types.CallToolRequest) -> types.ServerResult:
     tool_name = req.params.name
     args = req.params.arguments or {}
-    logger.info("Received tool call: name=%s args=%s", tool_name, json.dumps(args, default=str))
+    logger.info(
+        "Received tool call: name=%s args=%s", tool_name, json.dumps(args, default=str)
+    )
 
     try:
         if tool_name == "data-explorer.open":
@@ -749,7 +772,9 @@ async def _on_call_tool(req: types.CallToolRequest) -> types.ServerResult:
             return types.ServerResult(
                 types.CallToolResult(
                     content=[
-                        types.TextContent(type="text", text=f"Unknown tool: {tool_name}")
+                        types.TextContent(
+                            type="text", text=f"Unknown tool: {tool_name}"
+                        )
                     ],
                     isError=True,
                 )
@@ -765,7 +790,9 @@ async def _on_call_tool(req: types.CallToolRequest) -> types.ServerResult:
                 content=[
                     types.TextContent(
                         type="text",
-                        text=json.dumps({"error": "validation_error", "details": exc.errors()}),
+                        text=json.dumps(
+                            {"error": "validation_error", "details": exc.errors()}
+                        ),
                     )
                 ],
                 isError=True,
@@ -795,7 +822,9 @@ async def _on_call_tool(req: types.CallToolRequest) -> types.ServerResult:
                 content=[
                     types.TextContent(
                         type="text",
-                        text=json.dumps({"error": "internal_error", "details": str(exc)}),
+                        text=json.dumps(
+                            {"error": "internal_error", "details": str(exc)}
+                        ),
                     )
                 ],
                 isError=True,

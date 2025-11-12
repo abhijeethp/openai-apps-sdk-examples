@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from threading import Lock
 from typing import Dict, Iterable, Optional
@@ -30,7 +30,12 @@ class DatasetStore:
         self._lock = Lock()
 
     def create(
-        self, *, name: str, filename: Optional[str], dataframe: pd.DataFrame, profile: Dict
+        self,
+        *,
+        name: str,
+        filename: Optional[str],
+        dataframe: pd.DataFrame,
+        profile: Dict,
     ) -> DatasetRecord:
         dataset_id = str(uuid4())
         now = datetime.now(timezone.utc)

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 import numpy as np
 import pandas as pd
@@ -27,7 +27,9 @@ def _bar_chart(dataframe: pd.DataFrame, config: ChartConfig) -> List[Dict]:
     working = dataframe.dropna(subset=[config.x])
 
     if config.aggregation == Aggregation.COUNT:
-        grouped = working.groupby(group_keys, dropna=False).size().reset_index(name="value")
+        grouped = (
+            working.groupby(group_keys, dropna=False).size().reset_index(name="value")
+        )
     else:
         if config.y is None:
             raise ValueError("Bar charts with sum/avg require `y` column.")
@@ -52,7 +54,9 @@ def _bar_chart(dataframe: pd.DataFrame, config: ChartConfig) -> List[Dict]:
     return records
 
 
-def _scatter_points(dataframe: pd.DataFrame, config: ChartConfig, limit: int = 500) -> List[Dict]:
+def _scatter_points(
+    dataframe: pd.DataFrame, config: ChartConfig, limit: int = 500
+) -> List[Dict]:
     if config.y is None:
         raise ValueError("Scatter charts require `y` column.")
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any, Iterable, List, Optional
+from typing import Any, List
 
 import numpy as np
 import pandas as pd

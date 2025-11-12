@@ -87,8 +87,7 @@ class DataExplorerServerTests(unittest.TestCase):
         chart_response = main._handle_chart(chart_payload.model_dump(by_alias=True))
         self.assertEqual(chart_response["chartType"], "bar")
         categories = {
-            item["category"]: item["value"]
-            for item in chart_response["series"]
+            item["category"]: item["value"] for item in chart_response["series"]
         }
         self.assertEqual(categories["SF"], 2)
 
@@ -106,7 +105,9 @@ class DataExplorerServerTests(unittest.TestCase):
         self.assertEqual(histogram_response["chartType"], "histogram")
         total_counts = sum(bin_["count"] for bin_ in histogram_response["bins"])
         self.assertEqual(total_counts, 4)
-        self.assertTrue(all(math.isfinite(bin_["binStart"]) for bin_ in histogram_response["bins"]))
+        self.assertTrue(
+            all(math.isfinite(bin_["binStart"]) for bin_ in histogram_response["bins"])
+        )
 
     def test_chunked_upload_flow(self) -> None:
         init_response = main._handle_upload_init(

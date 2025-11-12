@@ -23,14 +23,22 @@ def apply_filters(dataframe: pd.DataFrame, filters: Iterable[Filter]) -> pd.Data
             continue
 
         if raw_filter.type == "equals":
-            equals_filter = raw_filter if isinstance(raw_filter, EqualsFilter) else EqualsFilter.model_validate(raw_filter.model_dump())
+            equals_filter = (
+                raw_filter
+                if isinstance(raw_filter, EqualsFilter)
+                else EqualsFilter.model_validate(raw_filter.model_dump())
+            )
             value = coerce_value_for_series(series, equals_filter.value)
             if value is None or pd.isna(value):
                 mask &= series.isna()
             else:
                 mask &= series == value
         elif raw_filter.type == "range":
-            range_filter = raw_filter if isinstance(raw_filter, RangeFilter) else RangeFilter.model_validate(raw_filter.model_dump())
+            range_filter = (
+                raw_filter
+                if isinstance(raw_filter, RangeFilter)
+                else RangeFilter.model_validate(raw_filter.model_dump())
+            )
             if range_filter.min is not None:
                 min_value = coerce_value_for_series(series, range_filter.min)
                 mask &= series >= min_value
