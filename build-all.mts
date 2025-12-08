@@ -17,7 +17,6 @@ const GLOBAL_CSS_LIST = [path.resolve("src/index.css")];
 const targets: string[] = [
   "todo",
   "solar-system",
-  "ecommerce",
   "pizzaz",
   "pizzaz-carousel",
   "pizzaz-list",
