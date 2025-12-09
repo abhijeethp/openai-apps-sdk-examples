@@ -117,8 +117,6 @@ pip install -r solar-system_server_python/requirements.txt
 uvicorn solar-system_server_python.main:app --port 8000
 ```
 
-You can reuse the same virtual environment for all Python servers—install the dependencies once and run whichever entry point you need.
-
 ### Shopping cart Python server
 
 Use this example to learn how `_meta["widgetSessionId"]` can carry `widgetState` between tool calls so the model and widget share the same shopping cart. The widget merges tool responses with prior `widgetState`, and UI actions (like incrementing quantities) feed back into that shared state so the assistant always sees the latest cart.
@@ -126,11 +124,16 @@ Use this example to learn how `_meta["widgetSessionId"]` can carry `widgetState`
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -r pizzaz_server_python/requirements.txt
-python shopping_cart_python/main.py
+pip install -r shopping_cart_python/requirements.txt
+uvicorn shopping_cart_python.main:app --port 8000
 ```
 
-In production you should persist the cart server-side (see `shopping_cart_python/README.md`), but this demo shows the mechanics of threading cart state through `widgetSessionId`.
+> [!NOTE]  
+> In production you should persist the cart server-side (see `shopping_cart_python/README.md`), but this demo shows the mechanics of threading keeping state through `widgetSessionId`.
+
+---
+
+You can reuse the same virtual environment for all Python servers—install the dependencies once and run whichever entry point you need.
 
 ## Testing in ChatGPT
 
