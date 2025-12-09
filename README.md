@@ -27,6 +27,7 @@ The MCP servers in this demo highlight how each tool can light up widgets by com
 - `pizzaz_server_python/` – Python MCP server that returns the Pizzaz widgets.
 - `solar-system_server_python/` – Python MCP server for the 3D solar system widget.
 - `build-all.mts` – Vite build orchestrator that produces hashed bundles for every widget entrypoint.
+- `authenticated_server_python/` – Python MCP server that demonstrates authenticated tool calls.
 
 ## Prerequisites
 
@@ -80,6 +81,7 @@ The repository ships several demo MCP servers that highlight different widget bu
 
 - **Pizzaz (Node & Python)** – pizza-inspired collection of tools and components
 - **Solar system (Python)** – 3D solar system viewer
+- **Authenticated (Python)** – pizza carousel tool that requires OAuth
 
 ### Pizzaz Node server
 
@@ -95,6 +97,15 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r pizzaz_server_python/requirements.txt
 uvicorn pizzaz_server_python.main:app --port 8000
+```
+
+### Authenticated Python server
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r authenticated_server_python/requirements.txt
+python authenticated_server_python/main.py
 ```
 
 ### Solar system Python server
