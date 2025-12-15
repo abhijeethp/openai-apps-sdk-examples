@@ -37,6 +37,7 @@ token, the tools return widget markup or structured results.
 
 5. **Update your environment variables**
    - `AUTHORIZATION_SERVER_URL`:  your tenant domain (e.g., `https://dev-your-tenant.us.auth0.com/`)
+   - Put a `.env` file in `authenticated_server_python/.env` if you prefer (same keys).
 
 ### 2. Customize the app
 

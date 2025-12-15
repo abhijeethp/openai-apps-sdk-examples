@@ -5,6 +5,7 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import dataclass
 from functools import lru_cache
+import os
 from pathlib import Path
 from typing import Any, Dict, List
 from urllib.parse import urlparse
@@ -12,6 +13,7 @@ from urllib.parse import urlparse
 import mcp.types as types
 from mcp.server.fastmcp import FastMCP
 from mcp.shared.auth import ProtectedResourceMetadata
+from dotenv import load_dotenv
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
@@ -27,7 +29,10 @@ class PizzazWidget:
     response_text: str
 
 
-ASSETS_DIR = Path(__file__).resolve().parent.parent / "assets"
+ROOT_DIR = Path(__file__).resolve().parent
+load_dotenv(ROOT_DIR / ".env")
+
+ASSETS_DIR = ROOT_DIR.parent / "assets"
 
 
 @lru_cache(maxsize=None)
@@ -139,8 +144,14 @@ PAST_ORDERS_DATA = [
     },
 ]
 
-AUTHORIZATION_SERVER_URL = "https://dev-65wmmp5d56ev40iy.us.auth0.com/"
-RESOURCE_SERVER_URL = "https://945c890ee720.ngrok-free.app/mcp"
+AUTHORIZATION_SERVER_URL = os.getenv(
+    "AUTHORIZATION_SERVER_URL",
+    "https://dev-65wmmp5d56ev40iy.us.auth0.com/",
+)
+RESOURCE_SERVER_URL = os.getenv(
+    "RESOURCE_SERVER_URL",
+    "https://945c890ee720.ngrok-free.app/mcp",
+)
 
 print("AUTHORIZATION_SERVER_URL", AUTHORIZATION_SERVER_URL)
 print("RESOURCE_SERVER_URL", RESOURCE_SERVER_URL)

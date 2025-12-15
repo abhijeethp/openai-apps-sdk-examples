@@ -20,10 +20,10 @@ const targets: string[] = [
   "pizzaz",
   "pizzaz-carousel",
   "pizzaz-list",
-  "mixed-auth-search",
-  "mixed-auth-past-orders",
   "pizzaz-albums",
   "pizzaz-shop",
+  "mixed-auth-search",
+  "mixed-auth-past-orders",
 ];
 const builtNames: string[] = [];
 
