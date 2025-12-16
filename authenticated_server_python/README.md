@@ -55,33 +55,37 @@ RESOURCE_SERVER_URL=
 
 ### 4. Installation
 
-#### Prerequisites
+#### Serve the assets
 
-- Python 3.10+
-- A virtual environment (recommended)
+In a separate terminal, from the root of the directory, build and serve the widget assets (required for the UI):
 
 ```bash
+cd openai-apps-sdk-examples/
+pnpm run build
+pnpm run serve
+```
+
+#### Install python requirements
+
+```bash
+cd authenticated_server_python/
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-#### Running the server
+#### Run MCP server
 
-In a separate terminal, from the root of the directory, build and serve the widget assets (required for the UI):
-
-```bash
-pnpm run build
-pnpm run serve
-```
-
-In a separate terminal, from the `authenticated_server_python`, run the following command to bring up the MCP server:
+Run the following command to bring up the MCP server:
 
 ```bash
+cd authenticated_python_server
 uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
-To expose the server publicly (required for ChatGPT to reach it), tunnel the local port with ngrok:
+#### Tunnel with ngrok
+
+In a separate tab, to expose the server publicly (required for ChatGPT to reach it), tunnel the local port with ngrok:
 
 ```bash
 ngrok http 8000
