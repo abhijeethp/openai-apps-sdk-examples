@@ -29,6 +29,8 @@ type API = {
   callTool: CallTool;
   sendFollowUpMessage: (args: { prompt: string }) => Promise<void>;
   openExternal(payload: { href: string }): void;
+  uploadFile?: (file: File | null) => Promise<{ fileId: string }>;
+  getFileDownloadUrl?: (args: { fileId: string }) => Promise<{ downloadUrl: string }>;
 
   // Layout controls
   requestDisplayMode: RequestDisplayMode;
