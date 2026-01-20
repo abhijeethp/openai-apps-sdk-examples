@@ -40,6 +40,7 @@ The MCP servers in this demo highlight how each tool can light up widgets by com
 - `kitchen_sink_server_node/` – Node MCP server for the kitchen-sink-lite widget.
 - `kitchen_sink_server_python/` – Python MCP server for the kitchen-sink-lite widget.
 - `authenticated_server_python/` – Python MCP server that demonstrates authenticated tool calls.
+- `auth_challenge_server_python/` – Python MCP server that demonstrates HTTP 401 + WWW-Authenticate auth discovery.
 - `build-all.mts` – Vite build orchestrator that produces hashed bundles for every widget entrypoint.
 
 ### Pizzaz overview
@@ -138,6 +139,15 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r authenticated_server_python/requirements.txt
 uvicorn authenticated_python_server.main:app --port 8000
+```
+
+### Auth challenge Python server (401 + WWW-Authenticate)
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r auth_challenge_server_python/requirements.txt
+uvicorn auth_challenge_server_python.main:app --port 8000
 ```
 
 ### Solar system Python server
